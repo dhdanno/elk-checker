@@ -11,7 +11,7 @@
 require 'vendor/autoload.php';
 
 // This holds name of the events we are looking for.
-$events_arr = array('test123', 'backups_rule1', '1221');
+$events_arr = array('test123', 'backups_rule1', '12222');
 
 // Setup
 ini_set('date.timezone', 'UTC' );
@@ -19,7 +19,7 @@ $today = date("Y.m.d");
 
 $client = Elasticsearch\ClientBuilder::create()->build();
 
-$timeframe = "12"; //time to lookback
+$timeframe = "15"; //time to lookback
 $unit = "h"; // h/m/d/m
 
 $params = [
@@ -31,8 +31,8 @@ $params = [
         'query' => [
           'range' => [
             '@timestamp' => [
-              'from' => 'now-'.$timeframe.'h/h',
-              'to'   => 'now/h'
+              'from' => 'now-'.$timeframe.'m/m',
+              'to'   => 'now/m'
             ]
           ]
         ]
@@ -51,8 +51,11 @@ foreach ($events_arr as $event) {
 function search($response, $event, $timeframe, $unit) {
   // check the array of hits for what we are looking for
   if (count($response['hits']['hits']) > 0) {
-
+    $count = count($response['hits']['hits']);
+    
+    $c=0;
     $i=0;
+
     foreach($response['hits']['hits'] as $arr) {
 
       $host = $arr['_source']['host'];
@@ -63,6 +66,7 @@ function search($response, $event, $timeframe, $unit) {
         echo "Found the event in the specified timeframe ".$msg."\n";
         $i++;
       }
+    $c++;
     }
 
   } else {
@@ -74,7 +78,13 @@ function search($response, $event, $timeframe, $unit) {
     //echo "things are good\n";
   } else {
     echo "Presence or success not found for event ".$event." in the past ".$timeframe." ".$unit."... This is a problem\n";
-    exit(1);
+    $fail = true;
+  }
+
+  if ($count == $c) {
+    if ($fail) {
+      exit(1);
+    }
   }
 
 }
