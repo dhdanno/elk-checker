@@ -20,7 +20,7 @@ $today = date("Y.m.d");
 $client = Elasticsearch\ClientBuilder::create()->build();
 
 $timeframe = "15"; //time to lookback
-$unit = "h"; // h/m/d/m
+$unit = "m"; // h/m/d/m
 
 $params = [
   'index' => 'logstash-*', //scan all available indexes
@@ -31,8 +31,8 @@ $params = [
         'query' => [
           'range' => [
             '@timestamp' => [
-              'from' => 'now-'.$timeframe.'m/m',
-              'to'   => 'now/m'
+              'from' => 'now-'.$timeframe.$unit.'/'.$unit,
+              'to'   => 'now/'.$unit
             ]
           ]
         ]
