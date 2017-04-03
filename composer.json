@@ -1,6 +1,5 @@
 {
     "require": {
-        "elasticsearch/elasticsearch": "~2.0",
-	"php-amqplib/php-amqplib": "2.5.*"
+        "elasticsearch/elasticsearch": "~2.0"
     }
 }
