@@ -11,7 +11,7 @@
 require 'vendor/autoload.php';
 
 // This holds name of the events we are looking for.
-$events_arr = array('test123', 'backups_rule1', '12222');
+$events_arr = array('test123', '233');
 
 // Setup
 ini_set('date.timezone', 'UTC' );
@@ -45,15 +45,12 @@ $response = $client->search($params);
 //print_r($response); exit(0);
 
 foreach ($events_arr as $event) {
-  search($response, $event, $timeframe, $unit);  
+  search($response, $event, $timeframe, $unit);
 }
 
 function search($response, $event, $timeframe, $unit) {
   // check the array of hits for what we are looking for
   if (count($response['hits']['hits']) > 0) {
-    $count = count($response['hits']['hits']);
-    
-    $c=0;
     $i=0;
 
     foreach($response['hits']['hits'] as $arr) {
@@ -66,7 +63,6 @@ function search($response, $event, $timeframe, $unit) {
         echo "Found the event in the specified timeframe ".$msg."\n";
         $i++;
       }
-    $c++;
     }
 
   } else {
@@ -75,16 +71,9 @@ function search($response, $event, $timeframe, $unit) {
   }
 
   if ($i > 0) {
-    //echo "things are good\n";
   } else {
     echo "Presence or success not found for event ".$event." in the past ".$timeframe." ".$unit."... This is a problem\n";
-    $fail = true;
-  }
-
-  if ($count == $c) {
-    if ($fail) {
-      exit(1);
-    }
+    $status = false;
   }
 
 }
