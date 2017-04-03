@@ -1,0 +1,7 @@
+version: '3'
+services:
+
+  elk-checker:
+    build: 
+      context: .
+      dockerfile: Dockerfile
